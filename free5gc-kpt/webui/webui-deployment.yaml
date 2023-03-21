@@ -1,0 +1,112 @@
+---
+# Source: free5gc/charts/webui/templates/webui-deployment.yaml
+#
+# Software Name : towards5gs-helm
+# SPDX-FileCopyrightText: Copyright (c) 2021 Orange
+# SPDX-License-Identifier: Apache-2.0
+#
+# This software is distributed under the Apache License 2.0,
+# the text of which is available at https://github.com/Orange-OpenSource/towards5gs-helm/blob/main/LICENSE
+# or see the "LICENSE" file for more details.
+#
+# Author: Abderaouf KHICHANE, Ilhem FAJJARI, Ayoub BOUSSELMI
+# Software description: An open-source project providing Helm charts to deploy 5G components (Core + RAN) on top of Kubernetes
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: release-name-webui-webui
+  labels:
+    helm.sh/chart: webui-0.1.2
+    app.kubernetes.io/name: webui
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "v3.1.1"
+    app.kubernetes.io/managed-by: Helm
+    project: free5gc
+    nf: webui
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: webui
+      app.kubernetes.io/instance: release-name
+      project: free5gc
+      nf: webui
+  template:
+    metadata:
+      annotations:
+        
+        checksum/config: f800d9aa2c17cbfdbff854d6dc62585950b1b8db6e954e2e024033a3986632af    
+      labels:
+        app.kubernetes.io/name: webui
+        app.kubernetes.io/instance: release-name
+        project: free5gc
+        nf: webui
+    spec:
+      imagePullSecrets:
+        []
+      securityContext:
+        {}
+      initContainers:
+      - name: wait-mongo
+        image: busybox:1.32.0
+        env:
+        - name: DEPENDENCIES
+          value: mongodb:27017
+        command: ["sh", "-c", "until nc -z $DEPENDENCIES; do echo waiting for the MongoDB; sleep 2; done;"]
+      containers:
+      - name: webui
+        image: towards5gs/free5gc-webui:v3.1.1
+        imagePullPolicy: Always
+        securityContext:
+            {}
+        ports:
+        - containerPort: 5000
+        command: ["./webconsole"]
+        args: ["-c", "../config/webuicfg.yaml"]
+        env:
+          - name: GIN_MODE
+            value: release
+        volumeMounts:
+        - mountPath: /free5gc/config/
+          name: webui-volume
+        resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+        readinessProbe:
+          initialDelaySeconds: 0
+          periodSeconds: 1
+          timeoutSeconds: 1
+          failureThreshold:  40
+          successThreshold: 1
+          httpGet:
+            scheme: HTTP
+            port: 5000
+        livenessProbe:
+          initialDelaySeconds: 120
+          periodSeconds: 10
+          timeoutSeconds: 10
+          failureThreshold: 3
+          successThreshold: 1
+          httpGet:
+            scheme: HTTP
+            port: 5000
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      nodeSelector:
+        {}
+      affinity:
+        {}
+      tolerations:
+        []
+
+      volumes:
+      - name: webui-volume
+        projected:
+          sources:
+          - configMap:
+              name: webui-configmap

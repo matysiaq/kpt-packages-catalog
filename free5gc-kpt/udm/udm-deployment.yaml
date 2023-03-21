@@ -1,0 +1,95 @@
+---
+# Source: free5gc/charts/udm/templates/udm-deployment.yaml
+#
+# Software Name : towards5gs-helm
+# SPDX-FileCopyrightText: Copyright (c) 2021 Orange
+# SPDX-License-Identifier: Apache-2.0
+#
+# This software is distributed under the Apache License 2.0,
+# the text of which is available at https://github.com/Orange-OpenSource/towards5gs-helm/blob/main/LICENSE
+# or see the "LICENSE" file for more details.
+#
+# Author: Abderaouf KHICHANE, Ilhem FAJJARI, Ayoub BOUSSELMI
+# Software description: An open-source project providing Helm charts to deploy 5G components (Core + RAN) on top of Kubernetes
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: release-name-udm-udm
+  labels:
+    helm.sh/chart: udm-0.2.2
+    app.kubernetes.io/name: udm
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "v3.1.1"
+    app.kubernetes.io/managed-by: Helm
+    project: free5gc
+    nf: udm
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: udm
+      app.kubernetes.io/instance: release-name
+      project: free5gc
+      nf: udm
+  template:
+    metadata:
+      annotations:
+        
+        checksum/config: b7a06476cab1c13008aca8ee587fa10743154f8dc7961bfb5d4a395e925829f7
+      labels:
+        app.kubernetes.io/name: udm
+        app.kubernetes.io/instance: release-name
+        project: free5gc
+        nf: udm
+    spec:
+      imagePullSecrets:
+        []
+      securityContext:
+        {}
+      initContainers:
+      - name: wait-nrf
+        image: towards5gs/initcurl:1.0.0
+        env:
+        - name: DEPENDENCIES
+          value: http://nrf-nnrf:8000
+        command: ['sh', '-c', 'set -x; for dependency in $DEPENDENCIES; do while [ $(curl --insecure --connect-timeout 1 -s -o /dev/null -w "%{http_code}" $dependency) -ne 200 ]; do echo waiting for dependencies; sleep 1; done; done;']
+
+      containers:
+      - name: udm
+        image: towards5gs/free5gc-udm:v3.1.1
+        imagePullPolicy: Always
+        securityContext:
+            {}
+        ports:
+        - containerPort: 80
+        command: ["./udm"]
+        args: ["-c", "../config/udmcfg.yaml"]
+        env: 
+          - name: GIN_MODE
+            value: release
+        volumeMounts:
+        - mountPath: /free5gc/config/
+          name: udm-volume
+        resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      nodeSelector:
+        {}
+      affinity:
+        {}
+      tolerations:
+        []
+
+      volumes:
+      - name: udm-volume
+        projected:
+          sources:
+          - configMap:
+              name: udm-configmap

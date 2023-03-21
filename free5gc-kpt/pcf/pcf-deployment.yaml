@@ -1,0 +1,96 @@
+---
+# Source: free5gc/charts/pcf/templates/pcf-deployment.yaml
+#
+# Software Name : towards5gs-helm
+# SPDX-FileCopyrightText: Copyright (c) 2021 Orange
+# SPDX-License-Identifier: Apache-2.0
+#
+# This software is distributed under the Apache License 2.0,
+# the text of which is available at https://github.com/Orange-OpenSource/towards5gs-helm/blob/main/LICENSE
+# or see the "LICENSE" file for more details.
+#
+# Author: Abderaouf KHICHANE, Ilhem FAJJARI, Ayoub BOUSSELMI
+# Software description: An open-source project providing Helm charts to deploy 5G components (Core + RAN) on top of Kubernetes
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: release-name-pcf-pcf
+  labels:
+    helm.sh/chart: pcf-0.2.2
+    app.kubernetes.io/name: pcf
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "v3.1.1"
+    app.kubernetes.io/managed-by: Helm
+    project: free5gc
+    nf: pcf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: pcf
+      app.kubernetes.io/instance: release-name
+      project: free5gc
+      nf: pcf
+  template:
+    metadata:
+      annotations:
+        
+        checksum/config: 06cc70324cd58f87eb9d02c6e84c9953a9e06a326f7c584f7b137895a4c0eced
+      labels:
+        app.kubernetes.io/name: pcf
+        app.kubernetes.io/instance: release-name
+        project: free5gc
+        nf: pcf
+    spec:
+      imagePullSecrets:
+        []
+      securityContext:
+        {}
+      initContainers:
+      - name: wait-nrf
+        image: towards5gs/initcurl:1.0.0
+        env:
+        - name: DEPENDENCIES
+          value: http://nrf-nnrf:8000
+        command: ['sh', '-c', 'set -x; for dependency in $DEPENDENCIES; do while [ $(curl --insecure --connect-timeout 1 -s -o /dev/null -w "%{http_code}" $dependency) -ne 200 ]; do echo waiting for dependencies; sleep 1; done; done;']
+
+
+      containers:
+      - name: pcf
+        image: towards5gs/free5gc-pcf:v3.1.1
+        imagePullPolicy: Always
+        securityContext:
+            {}
+        ports:
+        - containerPort: 80
+        command: ["./pcf"]
+        args: ["-c", "../config/pcfcfg.yaml"]
+        env:
+          - name: GIN_MODE
+            value: release
+        volumeMounts:
+        - mountPath: /free5gc/config/
+          name: pcf-volume
+        resources:
+            limits:
+              cpu: 100m
+              memory: 128Mi
+            requests:
+              cpu: 100m
+              memory: 128Mi
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      nodeSelector:
+        {}
+      affinity:
+        {}
+      tolerations:
+        []
+
+      volumes:
+      - name: pcf-volume
+        projected:
+          sources:
+          - configMap:
+              name: pcf-configmap

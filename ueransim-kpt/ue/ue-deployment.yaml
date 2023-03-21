@@ -1,0 +1,69 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: release-name-ueransim-ue
+  labels:
+    helm.sh/chart: ueransim-2.0.15
+    app.kubernetes.io/name: ueransim
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "v3.2.6"
+    app.kubernetes.io/managed-by: Helm
+    app: ueransim
+    component: ue
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ueransim
+      app.kubernetes.io/instance: release-name
+      app: ueransim
+      component: ue
+  replicas: 1
+  template:
+    metadata:
+      annotations:
+        
+      labels:
+        app.kubernetes.io/name: ueransim
+        app.kubernetes.io/instance: release-name
+        app: ueransim
+        component: ue
+    spec:
+      imagePullSecrets:
+        []
+      securityContext:
+        {}
+      containers:
+      - image: towards5gs/ueransim-ue:v3.2.6
+        name: ue
+        securityContext:
+            capabilities:
+              add:
+              - NET_ADMIN
+        command: ["/ueransim/config/wrapper.sh"]
+        volumeMounts:
+        - mountPath: /ueransim/config
+          name: ue-volume
+        resources:
+            requests:
+              cpu: 120m
+              memory: 128Mi
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      nodeSelector:
+        {}
+      affinity:
+        {}
+      tolerations:
+        []
+
+      volumes:
+      - name: ue-volume
+        configMap:
+          name: ue-configmap
+          items:
+          - key: ue-config.yaml
+            path: ue-config.yaml
+          - key: wrapper.sh
+            path: wrapper.sh
+            mode: 0755

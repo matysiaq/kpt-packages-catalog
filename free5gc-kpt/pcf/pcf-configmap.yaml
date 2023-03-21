@@ -1,0 +1,60 @@
+---
+# Source: free5gc/charts/pcf/templates/pcf-configmap.yaml
+#
+# Software Name : towards5gs-helm
+# SPDX-FileCopyrightText: Copyright (c) 2021 Orange
+# SPDX-License-Identifier: Apache-2.0
+#
+# This software is distributed under the Apache License 2.0,
+# the text of which is available at https://github.com/Orange-OpenSource/towards5gs-helm/blob/main/LICENSE
+# or see the "LICENSE" file for more details.
+#
+# Author: Abderaouf KHICHANE, Ilhem FAJJARI, Ayoub BOUSSELMI
+# Software description: An open-source project providing Helm charts to deploy 5G components (Core + RAN) on top of Kubernetes
+#
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: pcf-configmap
+  labels:
+    app: free5gc
+data:
+  pcfcfg.yaml: |
+    info:
+      version: 1.0.1
+      description: PCF initial local configuration
+
+    configuration:
+      serviceList:
+        - serviceName: npcf-am-policy-control
+        - serviceName: npcf-smpolicycontrol
+          suppFeat: 3fff
+        - serviceName: npcf-bdtpolicycontrol
+        - serviceName: npcf-policyauthorization
+          suppFeat: 3
+        - serviceName: npcf-eventexposure
+        - serviceName: npcf-ue-policy-control
+
+      sbi:
+        scheme: http
+        registerIPv4: pcf-npcf # IP used to register to NRF
+        bindingIPv4: 0.0.0.0  # IP used to bind the service
+        port: 80
+        tls:
+          key: config/TLS/pcf.key
+          pem: config/TLS/pcf.pem
+      
+      mongodb:       # the mongodb connected by this PCF
+        name: free5gc                  # name of the mongodb
+        url: mongodb://mongodb:27017 # a valid URL of the mongodb
+      
+      nrfUri: http://nrf-nnrf:8000
+      pcfName: PCF
+      timeFormat: 2019-01-02 15:04:05
+      defaultBdtRefId: BdtPolicyId-
+      locality: area1
+
+    logger:
+      PCF:
+        ReportCaller: false
+        debugLevel: info

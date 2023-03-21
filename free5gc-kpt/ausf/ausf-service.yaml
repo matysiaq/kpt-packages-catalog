@@ -1,0 +1,38 @@
+---
+# Source: free5gc/charts/ausf/templates/ausf-service.yaml
+#
+# Software Name : towards5gs-helm
+# SPDX-FileCopyrightText: Copyright (c) 2021 Orange
+# SPDX-License-Identifier: Apache-2.0
+#
+# This software is distributed under the Apache License 2.0,
+# the text of which is available at https://github.com/Orange-OpenSource/towards5gs-helm/blob/main/LICENSE
+# or see the "LICENSE" file for more details.
+#
+# Author: Abderaouf KHICHANE, Ilhem FAJJARI, Ayoub BOUSSELMI
+# Software description: An open-source project providing Helm charts to deploy 5G components (Core + RAN) on top of Kubernetes
+#
+apiVersion: v1
+kind: Service
+metadata:
+  name: ausf-nausf
+  labels:
+    helm.sh/chart: ausf-0.2.2
+    app.kubernetes.io/name: ausf
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "v3.1.1"
+    app.kubernetes.io/managed-by: Helm
+    project: free5gc
+    nf: ausf
+spec:
+  type: ClusterIP
+  ports:
+    - port: 80
+      targetPort: 80
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: ausf
+    app.kubernetes.io/instance: release-name
+    project: free5gc
+    nf: ausf

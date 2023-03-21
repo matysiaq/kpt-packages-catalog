@@ -1,0 +1,107 @@
+---
+# Source: free5gc/charts/amf/templates/amf-deployment.yaml
+#
+# Software Name : towards5gs-helm
+# SPDX-FileCopyrightText: Copyright (c) 2021 Orange
+# SPDX-License-Identifier: Apache-2.0
+#
+# This software is distributed under the Apache License 2.0,
+# the text of which is available at https://github.com/Orange-OpenSource/towards5gs-helm/blob/main/LICENSE
+# or see the "LICENSE" file for more details.
+#
+# Author: Abderaouf KHICHANE, Ilhem FAJJARI, Ayoub BOUSSELMI
+# Software description: An open-source project providing Helm charts to deploy 5G components (Core + RAN) on top of Kubernetes
+#
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: release-name-amf-amf
+  labels:
+    helm.sh/chart: amf-0.2.2
+    app.kubernetes.io/name: amf
+    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/version: "v3.1.1"
+    app.kubernetes.io/managed-by: Helm
+    project: free5gc
+    nf: amf
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: amf
+      app.kubernetes.io/instance: release-name
+      project: free5gc
+      nf: amf
+  template:
+    metadata:
+      annotations:
+                
+        k8s.v1.cni.cncf.io/networks: '[
+            { "name": "n2network-amf",
+              "interface": "n2",
+              "ips": [ "10.100.50.249/29" ],
+              "gateway": [ "10.100.50.254" ]
+            }]'
+        checksum/config: e55252b780f735a002080d1a8c9e9ca06bb0f1b0947e7249a6edff99fce5000a
+      labels:
+        app.kubernetes.io/name: amf
+        app.kubernetes.io/instance: release-name
+        project: free5gc
+        nf: amf
+    spec:
+      imagePullSecrets:
+        []
+      securityContext:
+        {}
+      initContainers:
+      - name: wait-nrf
+        image: towards5gs/initcurl:1.0.0
+        env:
+        - name: DEPENDENCIES
+          value: http://nrf-nnrf:8000
+        command: ['sh', '-c', 'set -x; for dependency in $DEPENDENCIES; do while [ $(curl --insecure --connect-timeout 1 -s -o /dev/null -w "%{http_code}" $dependency) -ne 200 ]; do echo waiting for dependencies; sleep 1; done; done;']   
+      
+      containers:
+      - name: amf
+        image: towards5gs/free5gc-amf:v3.1.1
+        imagePullPolicy: Always
+        securityContext:
+            {}
+        ports:
+        - containerPort: 80
+        ports:
+        - name: namf
+          containerPort: 80
+        - name: n2
+          containerPort: 38412
+          protocol: SCTP
+        command: ["./amf"]
+        args: ["-c", "../config/amfcfg.yaml"]
+        env:
+          - name: GIN_MODE
+            value: release
+        volumeMounts:
+        - mountPath: /free5gc/config/
+          name: amf-volume
+        resources:
+            limits:
+              cpu: 150m
+              memory: 128Mi
+            requests:
+              cpu: 150m
+              memory: 128Mi
+      dnsPolicy: ClusterFirst
+      restartPolicy: Always
+      nodeSelector:
+        {}
+      affinity:
+        {}
+      tolerations:
+        []
+
+      volumes:
+      - name: amf-volume
+        projected:
+          sources:
+          - configMap:
+              name: amf-configmap
