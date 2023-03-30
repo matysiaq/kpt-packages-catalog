@@ -2,20 +2,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: release-name-ueransim-gnb
+  name: ueransim-ueransim-gnb
   labels:
     helm.sh/chart: ueransim-2.0.15
     app.kubernetes.io/name: ueransim
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/instance: ueransim
     app.kubernetes.io/version: "v3.2.6"
-    app.kubernetes.io/managed-by: Helm
     app: ueransim
     component: gnb
 spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: ueransim
-      app.kubernetes.io/instance: release-name
+      app.kubernetes.io/instance: ueransim
       app: ueransim
       component: gnb
   replicas: 1
@@ -23,18 +22,18 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: ueransim
-        app.kubernetes.io/instance: release-name
+        app.kubernetes.io/instance: ueransim
         app: ueransim
         component: gnb
       annotations:
         
         k8s.v1.cni.cncf.io/networks: '[
-            { "name": "n2network-release-name-ueransim",
+            { "name": "n2network-ueransim-ueransim",
               "interface": "n2",
               "ips": [ "10.100.50.250/29" ],
               "gateway": [ "10.100.50.254" ]
             },
-            { "name": "n3network-release-name-ueransim",
+            { "name": "n3network-ueransim-ueransim",
               "interface": "n3",
               "ips": [ "10.0.0.20/24" ],
               "gateway": [ "10.0.0.1" ]

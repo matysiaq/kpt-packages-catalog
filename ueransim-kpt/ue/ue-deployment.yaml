@@ -2,20 +2,19 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: release-name-ueransim-ue
+  name: ueransim-ueransim-ue
   labels:
     helm.sh/chart: ueransim-2.0.15
     app.kubernetes.io/name: ueransim
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/instance: ueransim
     app.kubernetes.io/version: "v3.2.6"
-    app.kubernetes.io/managed-by: Helm
     app: ueransim
     component: ue
 spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: ueransim
-      app.kubernetes.io/instance: release-name
+      app.kubernetes.io/instance: ueransim
       app: ueransim
       component: ue
   replicas: 1
@@ -25,7 +24,7 @@ spec:
         
       labels:
         app.kubernetes.io/name: ueransim
-        app.kubernetes.io/instance: release-name
+        app.kubernetes.io/instance: ueransim
         app: ueransim
         component: ue
     spec:
