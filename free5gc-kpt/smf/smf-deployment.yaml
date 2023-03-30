@@ -68,8 +68,6 @@ spec:
         securityContext:
             {}
         ports:
-        - containerPort: 80
-        ports:
         - name: nsmf
           containerPort: 80
         - name: n4
