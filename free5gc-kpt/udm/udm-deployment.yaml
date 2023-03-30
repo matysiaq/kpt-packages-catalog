@@ -15,13 +15,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: release-name-udm-udm
+  name: free5gc-udm-udm
   labels:
     helm.sh/chart: udm-0.2.2
     app.kubernetes.io/name: udm
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/instance: free5gc
     app.kubernetes.io/version: "v3.1.1"
-    app.kubernetes.io/managed-by: Helm
     project: free5gc
     nf: udm
 spec:
@@ -29,17 +28,14 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: udm
-      app.kubernetes.io/instance: release-name
+      app.kubernetes.io/instance: free5gc
       project: free5gc
       nf: udm
   template:
     metadata:
-      annotations:
-        
-        checksum/config: b7a06476cab1c13008aca8ee587fa10743154f8dc7961bfb5d4a395e925829f7
       labels:
         app.kubernetes.io/name: udm
-        app.kubernetes.io/instance: release-name
+        app.kubernetes.io/instance: free5gc
         project: free5gc
         nf: udm
     spec:

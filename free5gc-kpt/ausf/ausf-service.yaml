@@ -19,7 +19,7 @@ metadata:
   labels:
     helm.sh/chart: ausf-0.2.2
     app.kubernetes.io/name: ausf
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/instance: free5gc
     app.kubernetes.io/version: "v3.1.1"
     app.kubernetes.io/managed-by: Helm
     project: free5gc
@@ -33,6 +33,6 @@ spec:
       name: http
   selector:
     app.kubernetes.io/name: ausf
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/instance: free5gc
     project: free5gc
     nf: ausf

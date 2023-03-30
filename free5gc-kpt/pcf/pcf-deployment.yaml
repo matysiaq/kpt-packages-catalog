@@ -15,13 +15,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: release-name-pcf-pcf
+  name: free5gc-pcf-pcf
   labels:
     helm.sh/chart: pcf-0.2.2
     app.kubernetes.io/name: pcf
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/instance: free5gc
     app.kubernetes.io/version: "v3.1.1"
-    app.kubernetes.io/managed-by: Helm
     project: free5gc
     nf: pcf
 spec:
@@ -29,17 +28,14 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: pcf
-      app.kubernetes.io/instance: release-name
+      app.kubernetes.io/instance: free5gc
       project: free5gc
       nf: pcf
   template:
     metadata:
-      annotations:
-        
-        checksum/config: 06cc70324cd58f87eb9d02c6e84c9953a9e06a326f7c584f7b137895a4c0eced
       labels:
         app.kubernetes.io/name: pcf
-        app.kubernetes.io/instance: release-name
+        app.kubernetes.io/instance: free5gc
         project: free5gc
         nf: pcf
     spec:

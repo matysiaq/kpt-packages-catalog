@@ -15,13 +15,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: release-name-webui-webui
+  name: free5gc-webui-webui
   labels:
     helm.sh/chart: webui-0.1.2
     app.kubernetes.io/name: webui
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/instance: free5gc
     app.kubernetes.io/version: "v3.1.1"
-    app.kubernetes.io/managed-by: Helm
     project: free5gc
     nf: webui
 spec:
@@ -29,17 +28,14 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: webui
-      app.kubernetes.io/instance: release-name
+      app.kubernetes.io/instance: free5gc
       project: free5gc
       nf: webui
   template:
     metadata:
-      annotations:
-        
-        checksum/config: f800d9aa2c17cbfdbff854d6dc62585950b1b8db6e954e2e024033a3986632af    
       labels:
         app.kubernetes.io/name: webui
-        app.kubernetes.io/instance: release-name
+        app.kubernetes.io/instance: free5gc
         project: free5gc
         nf: webui
     spec:

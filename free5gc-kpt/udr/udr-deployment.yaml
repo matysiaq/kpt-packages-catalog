@@ -15,13 +15,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: release-name-udr-udr
+  name: free5gc-udr-udr
   labels:
     helm.sh/chart: udr-0.2.2
     app.kubernetes.io/name: udr
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/instance: free5gc
     app.kubernetes.io/version: "v3.1.1"
-    app.kubernetes.io/managed-by: Helm
     project: free5gc
     nf: udr
 spec:
@@ -29,17 +28,14 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: udr
-      app.kubernetes.io/instance: release-name
+      app.kubernetes.io/instance: free5gc
       project: free5gc
       nf: udr
   template:
     metadata:
-      annotations:
-        
-        checksum/config: 4cdcc8ceff5d07228b527681593baad4f495fd2f2b75bec5b3d00580d4603080
       labels:
         app.kubernetes.io/name: udr
-        app.kubernetes.io/instance: release-name
+        app.kubernetes.io/instance: free5gc
         project: free5gc
         nf: udr
     spec:

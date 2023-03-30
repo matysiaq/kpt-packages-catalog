@@ -15,13 +15,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: release-name-nrf-nrf
+  name: free5gc-nrf-nrf
   labels:
     helm.sh/chart: nrf-0.2.2
     app.kubernetes.io/name: nrf
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/instance: free5gc
     app.kubernetes.io/version: "v3.1.1"
-    app.kubernetes.io/managed-by: Helm
     project: free5gc
     nf: nrf
 spec:
@@ -29,17 +28,14 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: nrf
-      app.kubernetes.io/instance: release-name
+      app.kubernetes.io/instance: free5gc
       project: free5gc
       nf: nrf
   template:
     metadata:
-      annotations:
-        
-        checksum/config: 894921faddfd65fd9296e2bf2668200785e623c124f95117bf16f1e3808b456d
       labels:
         app.kubernetes.io/name: nrf
-        app.kubernetes.io/instance: release-name
+        app.kubernetes.io/instance: free5gc
         project: free5gc
         nf: nrf
     spec:

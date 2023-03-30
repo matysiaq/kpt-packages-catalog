@@ -15,13 +15,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: release-name-nssf-nssf
+  name: free5gc-nssf-nssf
   labels:
     helm.sh/chart: nssf-0.2.2
     app.kubernetes.io/name: nssf
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/instance: free5gc
     app.kubernetes.io/version: "v3.1.1"
-    app.kubernetes.io/managed-by: Helm
     project: free5gc
     nf: nssf
 spec:
@@ -29,17 +28,14 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: nssf
-      app.kubernetes.io/instance: release-name
+      app.kubernetes.io/instance: free5gc
       project: free5gc
       nf: nssf
   template:
     metadata:
-      annotations:
-        
-        checksum/config: 716455f47cdcb111cc32441d4251e1decba9ac3f7b748e3c518f02cbfe2167dc
       labels:
         app.kubernetes.io/name: nssf
-        app.kubernetes.io/instance: release-name
+        app.kubernetes.io/instance: free5gc
         project: free5gc
         nf: nssf
     spec:

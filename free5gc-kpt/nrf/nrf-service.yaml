@@ -19,9 +19,8 @@ metadata:
   labels:
     helm.sh/chart: nrf-0.2.2
     app.kubernetes.io/name: nrf
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/instance: free5gc
     app.kubernetes.io/version: "v3.1.1"
-    app.kubernetes.io/managed-by: Helm
     project: free5gc
     nf: nrf
 spec:
@@ -33,6 +32,6 @@ spec:
       name: http
   selector:
     app.kubernetes.io/name: nrf
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/instance: free5gc
     project: free5gc
     nf: nrf

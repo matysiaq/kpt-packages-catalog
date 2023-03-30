@@ -15,11 +15,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: release-name-ausf-ausf
+  name: free5gc-ausf
   labels:
     helm.sh/chart: ausf-0.2.2
     app.kubernetes.io/name: ausf
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/instance: free5gc
     app.kubernetes.io/version: "v3.1.1"
     app.kubernetes.io/managed-by: Helm
     project: free5gc
@@ -29,17 +29,14 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: ausf
-      app.kubernetes.io/instance: release-name
+      app.kubernetes.io/instance: free5gc
       project: free5gc
       nf: ausf
   template:
     metadata:
-      annotations:
-        
-        checksum/config: d9e61ecac6e2c1c0d03b130d5f49e334d9c94cc9773f12a01321517d180b4f5e
       labels:
         app.kubernetes.io/name: ausf
-        app.kubernetes.io/instance: release-name
+        app.kubernetes.io/instance: free5gc
         project: free5gc
         nf: ausf
     spec:

@@ -15,13 +15,11 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: release-name-amf-amf
+  name: free5gc-amf
   labels:
-    helm.sh/chart: amf-0.2.2
     app.kubernetes.io/name: amf
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/instance: free5gc
     app.kubernetes.io/version: "v3.1.1"
-    app.kubernetes.io/managed-by: Helm
     project: free5gc
     nf: amf
 spec:
@@ -29,23 +27,21 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: amf
-      app.kubernetes.io/instance: release-name
+      app.kubernetes.io/instance: free5gc
       project: free5gc
       nf: amf
   template:
     metadata:
       annotations:
-                
         k8s.v1.cni.cncf.io/networks: '[
             { "name": "n2network-amf",
               "interface": "n2",
               "ips": [ "10.100.50.249/29" ],
               "gateway": [ "10.100.50.254" ]
             }]'
-        checksum/config: e55252b780f735a002080d1a8c9e9ca06bb0f1b0947e7249a6edff99fce5000a
       labels:
         app.kubernetes.io/name: amf
-        app.kubernetes.io/instance: release-name
+        app.kubernetes.io/instance: free5gc
         project: free5gc
         nf: amf
     spec:

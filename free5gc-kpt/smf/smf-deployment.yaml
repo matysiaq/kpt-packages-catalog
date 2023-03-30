@@ -15,13 +15,12 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: release-name-smf-smf
+  name: free5gc-smf-smf
   labels:
     helm.sh/chart: smf-0.2.2
     app.kubernetes.io/name: smf
-    app.kubernetes.io/instance: release-name
+    app.kubernetes.io/instance: free5gc
     app.kubernetes.io/version: "v3.1.1"
-    app.kubernetes.io/managed-by: Helm
     project: free5gc
     nf: smf
 spec:
@@ -29,23 +28,21 @@ spec:
   selector:
     matchLabels:
       app.kubernetes.io/name: smf
-      app.kubernetes.io/instance: release-name
+      app.kubernetes.io/instance: free5gc
       project: free5gc
       nf: smf
   template:
     metadata:
       annotations:
-        
         k8s.v1.cni.cncf.io/networks: '[
             { "name": "n4network-smf",
               "interface": "n4",
               "ips": [ "192.168.1.10/24" ],
               "gateway": [ "192.168.1.1" ]
             }]'
-        checksum/config: 552e1e9b07305d3b1c3286acd95607aa1543116b5e1ee7f430ce1c37d87cca0e
       labels:
         app.kubernetes.io/name: smf
-        app.kubernetes.io/instance: release-name
+        app.kubernetes.io/instance: free5gc
         project: free5gc
         nf: smf
     spec:
