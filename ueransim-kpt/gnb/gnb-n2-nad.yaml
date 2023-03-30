@@ -2,7 +2,7 @@
 apiVersion: "k8s.cni.cncf.io/v1"
 kind: NetworkAttachmentDefinition
 metadata:
-  name: n2network-release-name-ueransim
+  name: n2network-ueransim-ueransim
   namespace: ueransim
 spec:
   config: '{
